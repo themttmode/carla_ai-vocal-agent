@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carla — Assistente AI per il settore artigianale</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: slideUp 0.8s ease-out 0.2s both;
+        }
+
+        .trust-indicator {
+            margin-bottom: 3rem;
+            animation: slideUp 0.8s ease-out 0.4s both;
+        }
+
+        .trust-indicator p {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            gap: 1rem;
+            animation: slideUp 0.8s ease-out 0.6s both;
+        }
+
+        .hero-cta .cta-button {
+            font-size: 1.1rem;
+            padding: 16px 32px;
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .secondary-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Client Logos */
+        .client-logos {
+            background: white;
+            padding: 60px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .logos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            align-items: center;
+            opacity: 0.6;
+        }
+
+        .logo-item {
+            text-align: center;
+            padding: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            transition: all 0.3s ease;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #f8fafc;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000000;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .workflow-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .workflow-steps {
+            space-y: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            background: #e2e8f0;
+            transform: translateX(5px);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .step-content p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .use-case-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .demo-header h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .conversation {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            animation: messageSlide 0.5s ease-out;
+        }
+
+        .customer {
+            background: rgba(255, 255, 255, 0.2);
+            margin-left: 0;
+            margin-right: 2rem;
+        }
+
+        .ai {
+            background: rgba(255, 255, 255, 0.15);
+            margin-left: 2rem;
+            margin-right: 0;
+            border-left: 3px solid #ffd700;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1a202c;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-item {
+            text-align: center;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .benefit-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .benefit-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a202c;
+        }
+
+        .benefit-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            background: #f8fafc;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #e2e8f0;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 300px;
+        }
+
+        .faq-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .footer-section a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #2d3748;
+            padding-top: 2rem;
+            text-align: center;
+            color: #cbd5e0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .workflow-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .section-header h2 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Floating elements */
+        .floating-phone {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 4rem;
+            opacity: 0.3;
+            animation: floatPhone 6s ease-in-out infinite;
+        }
+
+        @keyframes floatPhone {
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-60%) rotate(5deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">Carla AI</div>
+            <ul class="nav-links">
+                <li><a href="#features">Funzionalità</a></li>
+                <li><a href="#how-it-works">Come Funziona</a></li>
+                <li><a href="#benefits">Vantaggi</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-phone">📞</div>
+        <div class="container hero-content">
+            <h1>Carla — la tua assistente AI per i professionisti delle installazioni</h1>
+            <p>A partire da €0,25 al minuto di chiamata, non perderai mai più una chiamata. Carla risponde automaticamente alle tue telefonate, comprende il tuo lavoro di installazione e garantisce che nessuna richiesta rimanga inevasa.</p>
+            
+            <div class="trust-indicator">
+                <p><strong>Il sistema telefonico AI per gli installatori e gli artigiani</strong></p>
+            </div>
+
+            <div class="hero-cta">
+                <a href="javascript:void(0)" class="cta-button">Prova Gratuita</a>
+                <a href="#demo" class="secondary-button">Guarda Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Logos -->
+    <section class="client-logos">
+        <div class="container">
+            <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; color: #1a202c;">A chi ci rivolgiamo</h2>
+            </div>
+            <div class="logos-grid">
+                <div class="logo-item">☀️ <strong>Installatori</strong> di Fotovoltaico e Pompe di calore</div>
+                <div class="logo-item">🏗️ <strong>Servizi di Ristrutturazione</strong></div>
+                <div class="logo-item">📐 <strong>Geometri e Architetti</strong></div>
+                <div class="logo-item">🔧 <strong>Idraulici e Artigiani</strong></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Non Perdere Mai Una Chiamata</h2>
+                <p>Carla gestisce ogni chiamata professionalmente, cattura ogni dettaglio e si integra perfettamente con il tuo flusso di lavoro di installazione esistente.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📞</div>
+                    <h3>Gestione Professionale delle Chiamate</h3>
+                    <p>Accetta le chiamate professionalmente a nome della tua azienda con una voce naturale e umana che crea fiducia con i tuoi clienti fin dal primo saluto.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Riconoscimento Intelligente</h3>
+                    <p>Riconosce automaticamente problemi come malfunzionamenti, offerte o richieste di richiamata. Carla comprende il tuo settore e risponde appropriatamente.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">💾</div>
+                    <h3>Integrazione CRM</h3>
+                    <p>Trasferisce le informazioni delle chiamate direttamente nel tuo archivio clienti (CRM) e invia automaticamente conferme via email e WhatsApp, garantendo che nessun dettaglio vada perso.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🕐</div>
+                    <h3>Disponibilità 24/7</h3>
+                    <p>Funziona 24 ore su 24 — anche la sera e nei weekend. Le chiamate di emergenza vengono gestite professionalmente quando non sei disponibile.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Guarda Carla in Azione</h2>
+                <p>Scopri come Carla gestisce le interazioni reali con i clienti con intelligenza e professionalità.</p>
+            </div>
+
+            <div class="workflow-container">
+                <div class="workflow-steps">
+                    <div class="step fade-in">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Chiamata in Arrivo</h4>
+                            <p>Il cliente chiama il numero della tua azienda. Carla risponde immediatamente con il saluto della tua azienda.</p>
+                        </div>
+                    </div>
+
+                    <div class="step fade-in">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Elaborazione Intelligente</h4>
+                            <p>Carla comprende le esigenze del cliente, pone domande pertinenti e determina l'azione appropriata.</p>
+                        </div>
+                    </div>
+
+                    <div class="step fade-in">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Raccolta Dati</h4>
+                            <p>Tutte le informazioni del cliente vengono registrate accuratamente e sincronizzate istantaneamente nel tuo sistema CRM.</p>
+                        </div>
+                    </div>
+
+                    <div class="step fade-in">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Azione di Follow-up</h4>
+                            <p>Carla programma richiamate, invia conferme o trasferisce chiamate urgenti in base alle tue preferenze.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="use-case-demo fade-in">
+                    <div class="demo-header">
+                        <h3>Esempio di Richiesta Nuovo Cliente</h3>
+                        <p>Richiesta ristrutturazione cucina</p>
+                    </div>
+                    
+                    <div class="conversation">
+                        <div class="message customer">
+                            <strong>Cliente:</strong> "Salve, ho bisogno di un preventivo per ristrutturare la mia cucina. Qualcuno può venire a vederla questa settimana?"
+                        </div>
+                        <div class="message ai">
+                            <strong>Carla:</strong> "Assolutamente! Sarò felice di aiutarla con la ristrutturazione della cucina. Raccolgo alcuni dettagli e fisso una consulenza. Quali sono le dimensioni approssimative della sua cucina?"
+                        </div>
+                        <div class="message customer">
+                            <strong>Cliente:</strong> "È circa 20 metri quadrati. Voglio aggiornare i mobili e i piani di lavoro."
+                        </div>
+                        <div class="message ai">
+                            <strong>Carla:</strong> "Perfetto. Programmerò la visita del nostro specialista per questa settimana. Può fornirmi i suoi contatti e l'orario preferito?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="section-header fade-in">
+                <h2>Risultati Misurabili</h2>
+                <p>Vedi l'impatto che Carla ha sulla tua azienda dal primo giorno.</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">+30%</span>
+                    <div class="benefit-label">Richieste Qualificate in Più</div>
+                    <div class="benefit-description">Attraverso la raccolta completa dei dati e la gestione professionale</div>
+                </div>
+
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">10ore</span>
+                    <div class="benefit-label">Risparmiate al Mese</div>
+                    <div class="benefit-description">Le aziende riducono significativamente il lavoro amministrativo</div>
+                </div>
+
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">100%</span>
+                    <div class="benefit-label">Sistema Integrato</div>
+                    <div class="benefit-description">Nessun cambio di strumenti necessario - funziona con la tua configurazione esistente</div>
+                </div>
+
+                <div class="benefit-item fade-in">
+                    <span class="benefit-number">24/7</span>
+                    <div class="benefit-label">Accesso di Emergenza</div>
+                    <div class="benefit-description">Sempre disponibile per le esigenze urgenti dei clienti</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <!-- FAQ Section -->
+<section class="faq" id="faq">
+    <div class="container">
+        <div class="section-header fade-in">
+            <h2>Come funziona Carla, l'assistente AI per installatori</h2>
+            <p>Tutto quello che devi sapere per implementare Carla nella tua azienda.</p>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Serve installare qualcosa?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>No, Carla è completamente in cloud. Ti basta impostare il trasferimento di chiamata sul tuo numero fisso o cellulare.</p>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Come funziona esattamente Carla?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Carla riceve automaticamente le chiamate che non puoi rispondere (numero occupato o fuori orario). Parla con il cliente a nome della tua azienda, capisce il motivo della chiamata (guasto, richiesta di preventivo, appuntamento) e registra tutte le informazioni. I dati raccolti (nome, numero, problema, orario per richiamare) ti vengono trasmessi via email o whatsapp. Nessuna installazione necessaria, tutto funziona via cloud e si attiva quando vuoi (ad esempio solo fuori orario o durante le ferie).</p>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Carla capisce anche richieste tecniche?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Sì. Carla è progettata appositamente per installatori e professionisti. Riconosce termini come "pompa di calore", "impianto fotovoltaico", "errore tecnico" e sa fare le domande giuste per ogni caso.</p>
+                </div>
+            </div>
+
+            <div class="faq-item fade-in">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Quanto tempo serve per attivare Carla?</span>
+                    <span class="faq-toggle">▼</span>
+                </div>
+                <div class="faq-answer">
+                    <p>Solo poche ore. Il nostro team ti aiuta a configurare saluti, orari di apertura e servizi. Poi sei subito operativo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Final CTA -->
+    <section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 80px 0; text-align: center; color: white;">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 700;">Pronto a Trasformare il Tuo Sistema Telefonico?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Unisciti ai professionisti che utilizzano il nostro sistema per lavorare con più serenità.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="javascript:void(0)" class="cta-button" style="font-size: 1.1rem; padding: 16px 32px;">Inizia Prova Gratuita Ora</a>
+                <a href="#demo" class="secondary-button">Prenota Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Prodotto</h4>
+                    <a href="#features">Funzionalità</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Azienda</h4>
+                    <a href="javascript:void(0)">Chi Siamo</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Supporto</h4>
+                    <a href="javascript:void(0)">Centro Assistenza</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Informazioni di Contatto</h4>
+                    <p style="color: #cbd5e0; margin-bottom: 0.5rem;">📞 800-CARLA-AI</p>
+                    <p style="color: #cbd5e0; margin-bottom: 0.5rem;">✉️ ciao@carla-ai.com</p>
+                    <p style="color: #cbd5e0;">📍 Disponibile in tutta Italia</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Carla AI. Tutti i diritti riservati. | Privacy Policy | Termini di Servizio</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Toggle Function
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const toggle = element.querySelector('.faq-toggle');
+            
+            answer.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+
+        // Scroll Animation Observer
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => observer.observe(el));
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive elements on load
+        window.addEventListener('load', function() {
+            // Animate trust indicator counter
+            const trustElement = document.querySelector('.trust-indicator strong');
+            if (trustElement) {
+                let count = 0;
+                const target = 800;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    count += increment;
+                    if (count >= target) {
+                        count = target;
+                        clearInterval(timer);
+                    }
+                    trustElement.textContent = `Il sistema telefonico AI per gli installatori e gli artigiani`;
+                }, 50);
+            }
+
+            // Add typing effect to demo conversation
+            const messages = document.querySelectorAll('.conversation .message');
+            messages.forEach((message, index) => {
+                message.style.animationDelay = `${index * 0.8}s`;
+            });
+        });
+
+        // Mobile menu toggle (for smaller screens)
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-active');
+        }
+
+        // Add mobile menu styles
+        const mobileStyles = `
+            @media (max-width: 768px) {
+                .nav-links.mobile-active {
+                    display: flex;
+                    flex-direction: column;
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    background: white;
+                    padding: 1rem;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                    border-radius: 0 0 10px 10px;
+                }
+                
+                .mobile-menu-toggle {
+                    display: block;
+                    background: none;
+                    border: none;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                }
+            }
+        `;
+
+        // Inject mobile styles
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = mobileStyles;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
