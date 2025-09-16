@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carla — Assistente AI per il settore artigianale</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Upfirst — AI that closes jobs for home service teams</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #040714;
+            --bg-alt: #070b1f;
+            --card: rgba(255, 255, 255, 0.06);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent: #8c6cff;
+            --accent-soft: rgba(140, 108, 255, 0.16);
+            --accent-2: #23d9b7;
+            --text: #f1f5ff;
+            --text-muted: rgba(238, 240, 255, 0.72);
+            --stroke-strong: rgba(255, 255, 255, 0.12);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,993 +28,1392 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, rgba(140, 108, 255, 0.25), transparent 55%),
+                        radial-gradient(circle at 20% 20%, rgba(35, 217, 183, 0.16), transparent 40%),
+                        var(--bg);
+            color: var(--text);
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+        .noise-overlay {
             position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.12;
+            background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="340" height="340" viewBox="0 0 340 340" fill="none"%3E%3Cpath opacity="0.2" d="M0 0H340V340H0z" fill="url(%23a)"/%3E%3Cdefs%3E%3CradialGradient id="a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(190 190)"%3E%3Cstop stop-color="%23fff"/%3E%3Cstop offset="1" stop-color="%23fff" stop-opacity="0"/%3E%3C/radialGradient%3E%3C/defs%3E%3C/svg%3E');
+            mix-blend-mode: screen;
+        }
+
+        header {
+            position: sticky;
             top: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            background: rgba(4, 7, 20, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         }
 
         nav {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 1.2rem 1.8rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
+            justify-content: space-between;
+            gap: 1.5rem;
         }
 
-        .logo {
-            font-size: 1.8rem;
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .brand-badge {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #23d9b7, #8c6cff);
+            display: grid;
+            place-items: center;
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 1.1rem;
+            color: #040714;
+        }
+
+        .brand span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: var(--text);
         }
 
         .nav-links {
             display: flex;
+            align-items: center;
+            gap: 1.5rem;
             list-style: none;
-            gap: 2rem;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: #333;
+            color: var(--text-muted);
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 0.95rem;
+            transition: color 0.2s ease, opacity 0.2s ease;
         }
 
         .nav-links a:hover {
-            color: #667eea;
+            color: #fff;
         }
 
-        .cta-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 50px;
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .ghost-btn,
+        .primary-btn {
             font-weight: 600;
+            font-size: 0.95rem;
+            border-radius: 999px;
+            padding: 0.7rem 1.4rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .cta-button:hover {
+        .ghost-btn {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .ghost-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #8c6cff, #23d9b7);
+            color: #040714;
+            box-shadow: 0 15px 35px rgba(140, 108, 255, 0.35);
+        }
+
+        .primary-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 20px 40px rgba(35, 217, 183, 0.35);
         }
 
-        /* Hero Section */
+        main {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 1.6rem 5rem;
+        }
+
         .hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 120px 0 80px;
-            text-align: center;
             position: relative;
-            overflow: hidden;
+            padding: 6.5rem 0 5rem;
+            display: grid;
+            gap: 4rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: center;
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            animation: float 20s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+            inset: -160px -240px auto auto;
+            width: 520px;
+            height: 520px;
+            background: radial-gradient(circle at 30% 30%, rgba(140, 108, 255, 0.45), transparent 65%);
+            filter: blur(50px);
+            opacity: 0.8;
+            z-index: -1;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-radius: 999px;
+            padding: 0.4rem 0.85rem;
+            background: rgba(140, 108, 255, 0.12);
+            color: var(--accent-2);
+            border: 1px solid rgba(140, 108, 255, 0.35);
+            width: fit-content;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-            animation: slideUp 0.8s ease-out;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.6rem, 5vw, 3.9rem);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
         }
 
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: slideUp 0.8s ease-out 0.2s both;
-        }
-
-        .trust-indicator {
-            margin-bottom: 3rem;
-            animation: slideUp 0.8s ease-out 0.4s both;
-        }
-
-        .trust-indicator p {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-bottom: 1rem;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 560px;
         }
 
         .hero-cta {
-            display: inline-flex;
-            gap: 1rem;
-            animation: slideUp 0.8s ease-out 0.6s both;
-        }
-
-        .hero-cta .cta-button {
-            font-size: 1.1rem;
-            padding: 16px 32px;
-        }
-
-        .secondary-button {
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 14px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .secondary-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Client Logos */
-        .client-logos {
-            background: white;
-            padding: 60px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .logos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+            display: flex;
             align-items: center;
-            opacity: 0.6;
+            gap: 1rem;
         }
 
-        .logo-item {
-            text-align: center;
-            padding: 1.5rem;
+        .hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .metric {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 1.2rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .metric strong {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.65rem;
+            letter-spacing: -0.01em;
+        }
+
+        .metric span {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .hero-visual {
+            position: relative;
+        }
+
+        .hero-panel {
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(145deg, rgba(14, 18, 40, 0.9), rgba(37, 29, 71, 0.9));
+            padding: 1.8rem;
+            box-shadow: 0 40px 70px rgba(2, 6, 23, 0.55);
+            position: relative;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.4rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            background: #23d9b7;
+            box-shadow: 0 0 16px rgba(35, 217, 183, 0.7);
+        }
+
+        .panel-title {
             font-weight: 600;
-            color: #1a202c;
-            transition: all 0.3s ease;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+            color: #dce2ff;
         }
 
-        .logo-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            border-color: #667eea;
+        .panel-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(220, 226, 255, 0.76);
+            border: 1px solid rgba(220, 226, 255, 0.16);
+            border-radius: 999px;
+            padding: 0.3rem 0.6rem;
         }
 
-        /* Features Section */
-        .features {
-            padding: 100px 0;
-            background: #f8fafc;
+        .call-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 0.9rem;
+            align-items: start;
+            padding: 1rem 1.1rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            margin-bottom: 1rem;
+        }
+
+        .call-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(140, 108, 255, 0.25);
+            display: grid;
+            place-items: center;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .call-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .call-meta strong {
+            font-size: 0.98rem;
+        }
+
+        .call-meta span {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .call-status {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(35, 217, 183, 0.12);
+            color: #23d9b7;
+            font-weight: 600;
+        }
+
+        .call-transcript {
+            grid-column: span 3;
+            font-size: 0.92rem;
+            color: rgba(243, 246, 255, 0.82);
+            line-height: 1.5;
+        }
+
+        .call-highlight {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-top: 0.9rem;
+            padding: 0.45rem 0.7rem;
+            border-radius: 999px;
+            background: rgba(140, 108, 255, 0.16);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .floating-card {
+            position: absolute;
+            right: -40px;
+            bottom: -45px;
+            background: rgba(4, 7, 20, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 1.1rem 1.3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            width: 220px;
+            box-shadow: 0 25px 45px rgba(2, 6, 23, 0.55);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-card span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .floating-card strong {
+            font-size: 1.35rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .logos {
+            margin: 3rem 0 4rem;
+            padding: 2.2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .logos p {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.24em;
+            font-size: 0.78rem;
+            text-align: center;
+        }
+
+        .logo-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.8rem;
+            justify-items: center;
+            align-items: center;
+        }
+
+        .logo-row span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            color: rgba(233, 236, 255, 0.68);
+            letter-spacing: 0.2em;
         }
 
         .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
+            max-width: 680px;
+            margin-bottom: 2.8rem;
+        }
+
+        .section-label {
+            display: inline-flex;
+            padding: 0.35rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid rgba(140, 108, 255, 0.35);
+            background: rgba(140, 108, 255, 0.14);
+            color: var(--accent-2);
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 0.78rem;
+            margin-bottom: 1.2rem;
         }
 
         .section-header h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 3.6vw, 2.8rem);
             margin-bottom: 1rem;
-            color: #000000;
         }
 
         .section-header p {
-            font-size: 1.2rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
+            color: var(--text-muted);
+            font-size: 1.05rem;
         }
 
-        .features-grid {
+        .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.4rem;
         }
 
         .feature-card {
-            background: white;
-            padding: 2.5rem;
+            background: rgba(8, 12, 32, 0.88);
             border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            inset: -20% 30% auto auto;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(35, 217, 183, 0.25), transparent 65%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
         }
 
         .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 1.5rem;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: rgba(140, 108, 255, 0.2);
+            display: grid;
+            place-items: center;
+            font-size: 1.4rem;
         }
 
         .feature-card h3 {
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #1a202c;
+            font-size: 1.25rem;
         }
 
         .feature-card p {
-            color: #666;
-            line-height: 1.6;
+            color: var(--text-muted);
+            font-size: 0.96rem;
         }
 
-        /* How It Works */
-        .how-it-works {
-            padding: 100px 0;
-            background: white;
+        .feature-meta {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
         }
 
-        .workflow-container {
+        .feature-meta span {
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(233, 236, 255, 0.68);
+        }
+
+        .platform {
+            margin: 5rem 0;
+            background: linear-gradient(135deg, rgba(140, 108, 255, 0.12), rgba(35, 217, 183, 0.12));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 26px;
+            padding: 3.5rem;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            margin-top: 3rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 2.6rem;
         }
 
-        .workflow-steps {
-            space-y: 2rem;
+        .platform ul {
+            list-style: none;
+            display: grid;
+            gap: 1.2rem;
+            color: var(--text-muted);
         }
 
-        .step {
+        .platform li {
+            padding-left: 2.4rem;
+            position: relative;
+            font-size: 1.02rem;
+        }
+
+        .platform li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.4rem;
+            width: 1.1rem;
+            height: 1.1rem;
+            border-radius: 30%;
+            background: linear-gradient(135deg, #23d9b7, #8c6cff);
+        }
+
+        .platform-visual {
+            background: rgba(4, 7, 20, 0.85);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2.2rem;
             display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 15px;
-            transition: all 0.3s ease;
+            flex-direction: column;
+            gap: 1.6rem;
         }
 
-        .step:hover {
-            background: #e2e8f0;
-            transform: translateX(5px);
+        .timeline {
+            display: grid;
+            gap: 1.4rem;
         }
 
-        .step-number {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .timeline-step {
+            border-left: 2px solid rgba(255, 255, 255, 0.08);
+            padding-left: 1.3rem;
+            position: relative;
+        }
+
+        .timeline-step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -1.25rem;
+            top: 0;
+            transform: translate(-50%, -20%);
+            background: rgba(140, 108, 255, 0.3);
+            border: 1px solid rgba(140, 108, 255, 0.45);
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            color: var(--text);
+        }
+
+        .timeline-step strong {
+            font-size: 1.05rem;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .timeline-step span {
+            color: var(--text-muted);
+            font-size: 0.94rem;
+        }
+
+        .use-cases {
+            margin: 5rem 0;
+        }
+
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.4rem;
+        }
+
+        .use-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.8rem;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
+            flex-direction: column;
+            gap: 0.8rem;
         }
 
-        .step-content h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1a202c;
+        .use-card h3 {
+            font-size: 1.15rem;
         }
 
-        .step-content p {
-            color: #666;
+        .use-card p {
+            color: var(--text-muted);
             font-size: 0.95rem;
         }
 
-        .use-case-demo {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2rem;
-            border-radius: 20px;
-            color: white;
-        }
-
-        .demo-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .demo-header h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .conversation {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .message {
-            margin-bottom: 1rem;
-            padding: 0.8rem 1rem;
-            border-radius: 10px;
-            animation: messageSlide 0.5s ease-out;
-        }
-
-        .customer {
-            background: rgba(255, 255, 255, 0.2);
-            margin-left: 0;
-            margin-right: 2rem;
-        }
-
-        .ai {
-            background: rgba(255, 255, 255, 0.15);
-            margin-left: 2rem;
-            margin-right: 0;
-            border-left: 3px solid #ffd700;
-        }
-
-        @keyframes messageSlide {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Benefits Section */
-        .benefits {
-            padding: 100px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            color: #1a202c;
-        }
-
-        .benefits-grid {
+        .stats-bar {
+            margin: 5rem 0 4rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
         }
 
-        .benefit-item {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 15px;
-            border: 1px solid #e2e8f0;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        .stat-card {
+            background: rgba(8, 12, 32, 0.9);
+            padding: 1.6rem;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
         }
 
-        .benefit-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        .stat-card strong {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.95rem;
         }
 
-        .benefit-number {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #667eea;
-            margin-bottom: 0.5rem;
-            display: block;
+        .stat-card span {
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
 
-        .benefit-label {
-            font-size: 1.1rem;
+        .testimonials {
+            margin: 5rem 0;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.4rem;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .testimonial-card p {
+            color: rgba(240, 243, 255, 0.8);
+            font-size: 0.98rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .testimonial-author .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(140, 108, 255, 0.22);
+            display: grid;
+            place-items: center;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #1a202c;
+            font-size: 1.1rem;
         }
 
-        .benefit-description {
+        .testimonial-author div {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .testimonial-author span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .pricing {
+            margin: 5rem 0 4rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.4rem;
+        }
+
+        .pricing-card {
+            background: rgba(4, 7, 20, 0.9);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+        }
+
+        .pricing-card.highlight {
+            background: linear-gradient(145deg, rgba(140, 108, 255, 0.18), rgba(35, 217, 183, 0.18));
+            border-color: rgba(140, 108, 255, 0.4);
+            box-shadow: 0 35px 65px rgba(16, 22, 54, 0.65);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.35rem;
+        }
+
+        .pricing-card strong {
+            font-size: 2.35rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .pricing-card span {
+            color: var(--text-muted);
             font-size: 0.9rem;
-            color: #666;
         }
 
-        /* FAQ Section */
+        .pricing-card ul {
+            list-style: none;
+            display: grid;
+            gap: 0.9rem;
+            font-size: 0.96rem;
+            color: var(--text-muted);
+        }
+
+        .pricing-card li {
+            display: flex;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .pricing-card li::before {
+            content: '✔';
+            color: #23d9b7;
+            font-size: 0.9rem;
+        }
+
         .faq {
-            padding: 100px 0;
-            background: white;
+            margin: 5rem 0;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3rem;
         }
 
-        .faq-container {
-            max-width: 800px;
-            margin: 0 auto;
+        .faq-list {
+            display: grid;
+            gap: 1.2rem;
         }
 
         .faq-item {
-            margin-bottom: 1rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
             overflow: hidden;
-            transition: all 0.3s ease;
+            background: rgba(4, 7, 20, 0.8);
         }
 
-        .faq-item:hover {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .faq-question {
-            background: #f8fafc;
-            padding: 1.5rem;
-            cursor: pointer;
+        .faq-item button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: inherit;
+            text-align: left;
+            padding: 1.4rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            justify-content: space-between;
+            gap: 1.2rem;
+            cursor: pointer;
         }
 
-        .faq-question:hover {
-            background: #e2e8f0;
+        .faq-item p {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: none;
         }
 
-        .faq-answer {
-            padding: 0 1.5rem;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        .faq-answer.active {
-            padding: 1.5rem;
-            max-height: 300px;
-        }
-
-        .faq-toggle {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .faq-toggle.active {
-            transform: rotate(180deg);
-        }
-
-        /* Footer */
-        .footer {
-            background: #1a202c;
-            color: white;
-            padding: 60px 0 30px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h4 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #ffd700;
-        }
-
-        .footer-section a {
-            color: #cbd5e0;
-            text-decoration: none;
-            transition: color 0.3s ease;
+        .faq-item.open p {
             display: block;
-            margin-bottom: 0.5rem;
         }
 
-        .footer-section a:hover {
-            color: white;
+        .faq-item svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.2s ease;
+        }
+
+        .faq-item.open svg {
+            transform: rotate(45deg);
+        }
+
+        .cta-section {
+            margin: 6rem 0 5rem;
+            border-radius: 28px;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(140, 108, 255, 0.28), rgba(35, 217, 183, 0.28));
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+            text-align: center;
+            align-items: center;
+        }
+
+        .cta-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.9rem);
+        }
+
+        .cta-section p {
+            max-width: 520px;
+            color: rgba(12, 18, 40, 0.88);
+            font-size: 1.05rem;
+        }
+
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3rem 0 4rem;
+            margin-top: 4rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, minmax(0, 1fr));
+            gap: 2.4rem;
+        }
+
+        .footer-grid h4 {
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            margin-bottom: 1.2rem;
+            color: rgba(233, 236, 255, 0.7);
+        }
+
+        .footer-grid ul {
+            list-style: none;
+            display: grid;
+            gap: 0.7rem;
+        }
+
+        .footer-grid a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-grid a:hover {
+            color: #fff;
         }
 
         .footer-bottom {
-            border-top: 1px solid #2d3748;
-            padding-top: 2rem;
-            text-align: center;
-            color: #cbd5e0;
+            margin-top: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: rgba(233, 236, 255, 0.54);
+            font-size: 0.85rem;
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.1rem;
-            }
-
-            .workflow-container {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .hero-cta {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .section-header h2 {
-                font-size: 2.2rem;
-            }
-        }
-
-        /* Scroll animations */
-        .fade-in {
+        .fade-up {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        .fade-in.visible {
+        .fade-up.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Floating elements */
-        .floating-phone {
-            position: absolute;
-            right: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 4rem;
-            opacity: 0.3;
-            animation: floatPhone 6s ease-in-out infinite;
+        .fade-delay-1 { transition-delay: 0.1s; }
+        .fade-delay-2 { transition-delay: 0.2s; }
+        .fade-delay-3 { transition-delay: 0.3s; }
+        .fade-delay-4 { transition-delay: 0.4s; }
+
+        @media (max-width: 1024px) {
+            .hero,
+            .platform {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 5rem 0 4rem;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .feature-grid,
+            .use-case-grid,
+            .testimonial-grid,
+            .pricing-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .footer-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
         }
 
-        @keyframes floatPhone {
-            0%, 100% { transform: translateY(-50%) rotate(0deg); }
-            50% { transform: translateY(-60%) rotate(5deg); }
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.9rem;
+            }
+
+            .actions {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+                padding-bottom: 3rem;
+            }
+
+            .hero-cta {
+                flex-wrap: wrap;
+            }
+
+            .hero-metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .feature-grid,
+            .use-case-grid,
+            .testimonial-grid,
+            .pricing-grid,
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .platform,
+            .logos,
+            .faq,
+            .cta-section {
+                padding: 2rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-card {
+                position: static;
+                margin-top: 1.5rem;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <div class="noise-overlay" aria-hidden="true"></div>
     <header>
-        <nav class="container">
-            <div class="logo">Carla AI</div>
+        <nav>
+            <a class="brand" href="#top">
+                <div class="brand-badge">UF</div>
+                <span>Upfirst</span>
+            </a>
             <ul class="nav-links">
-                <li><a href="#features">Funzionalità</a></li>
-                <li><a href="#how-it-works">Come Funziona</a></li>
-                <li><a href="#benefits">Vantaggi</a></li>
+                <li><a href="#platform">Platform</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#workflow">How it works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#faq">FAQ</a></li>
             </ul>
+            <div class="actions">
+                <a class="ghost-btn" href="mailto:hello@upfirst.ai">Talk to sales</a>
+                <a class="primary-btn" href="#demo">Book a live demo ▸</a>
+            </div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="floating-phone">📞</div>
-        <div class="container hero-content">
-            <h1>Carla — la tua assistente AI per i professionisti delle installazioni</h1>
-            <p>A partire da €0,25 al minuto di chiamata, non perderai mai più una chiamata. Carla risponde automaticamente alle tue telefonate, comprende il tuo lavoro di installazione e garantisce che nessuna richiesta rimanga inevasa.</p>
-            
-            <div class="trust-indicator">
-                <p><strong>Il sistema telefonico AI per gli installatori e gli artigiani</strong></p>
-            </div>
-
-            <div class="hero-cta">
-                <a href="javascript:void(0)" class="cta-button">Prova Gratuita</a>
-                <a href="#demo" class="secondary-button">Guarda Demo</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Client Logos -->
-    <section class="client-logos">
-        <div class="container">
-            <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
-                <h2 style="font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; color: #1a202c;">A chi ci rivolgiamo</h2>
-            </div>
-            <div class="logos-grid">
-                <div class="logo-item">☀️ <strong>Installatori</strong> di Fotovoltaico e Pompe di calore</div>
-                <div class="logo-item">🏗️ <strong>Servizi di Ristrutturazione</strong></div>
-                <div class="logo-item">📐 <strong>Geometri e Architetti</strong></div>
-                <div class="logo-item">🔧 <strong>Idraulici e Artigiani</strong></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2>Non Perdere Mai Una Chiamata</h2>
-                <p>Carla gestisce ogni chiamata professionalmente, cattura ogni dettaglio e si integra perfettamente con il tuo flusso di lavoro di installazione esistente.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">📞</div>
-                    <h3>Gestione Professionale delle Chiamate</h3>
-                    <p>Accetta le chiamate professionalmente a nome della tua azienda con una voce naturale e umana che crea fiducia con i tuoi clienti fin dal primo saluto.</p>
+    <main id="top">
+        <section class="hero">
+            <div class="hero-content fade-up">
+                <span class="hero-badge">Designed for home service teams</span>
+                <h1>AI that answers every lead, closes more jobs and keeps customers loyal.</h1>
+                <p>Upfirst connects to your phones, texts and web forms so every new request is answered in seconds. Close-night-and-day bookings, upsell memberships and track performance — all without adding headcount.</p>
+                <div class="hero-cta">
+                    <a class="primary-btn" href="#demo">Book a demo</a>
+                    <a class="ghost-btn" href="#workflow">See how it works</a>
                 </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🧠</div>
-                    <h3>Riconoscimento Intelligente</h3>
-                    <p>Riconosce automaticamente problemi come malfunzionamenti, offerte o richieste di richiamata. Carla comprende il tuo settore e risponde appropriatamente.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">💾</div>
-                    <h3>Integrazione CRM</h3>
-                    <p>Trasferisce le informazioni delle chiamate direttamente nel tuo archivio clienti (CRM) e invia automaticamente conferme via email e WhatsApp, garantendo che nessun dettaglio vada perso.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">🕐</div>
-                    <h3>Disponibilità 24/7</h3>
-                    <p>Funziona 24 ore su 24 — anche la sera e nei weekend. Le chiamate di emergenza vengono gestite professionalmente quando non sei disponibile.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2>Guarda Carla in Azione</h2>
-                <p>Scopri come Carla gestisce le interazioni reali con i clienti con intelligenza e professionalità.</p>
-            </div>
-
-            <div class="workflow-container">
-                <div class="workflow-steps">
-                    <div class="step fade-in">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Chiamata in Arrivo</h4>
-                            <p>Il cliente chiama il numero della tua azienda. Carla risponde immediatamente con il saluto della tua azienda.</p>
-                        </div>
+                <div class="hero-metrics">
+                    <div class="metric">
+                        <strong>74%</strong>
+                        <span>More jobs captured after hours</span>
                     </div>
-
-                    <div class="step fade-in">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Elaborazione Intelligente</h4>
-                            <p>Carla comprende le esigenze del cliente, pone domande pertinenti e determina l'azione appropriata.</p>
-                        </div>
+                    <div class="metric">
+                        <strong>45 sec</strong>
+                        <span>Average time to resolve inbound calls</span>
                     </div>
-
-                    <div class="step fade-in">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Raccolta Dati</h4>
-                            <p>Tutte le informazioni del cliente vengono registrate accuratamente e sincronizzate istantaneamente nel tuo sistema CRM.</p>
-                        </div>
-                    </div>
-
-                    <div class="step fade-in">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Azione di Follow-up</h4>
-                            <p>Carla programma richiamate, invia conferme o trasferisce chiamate urgenti in base alle tue preferenze.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="use-case-demo fade-in">
-                    <div class="demo-header">
-                        <h3>Esempio di Richiesta Nuovo Cliente</h3>
-                        <p>Richiesta ristrutturazione cucina</p>
-                    </div>
-                    
-                    <div class="conversation">
-                        <div class="message customer">
-                            <strong>Cliente:</strong> "Salve, ho bisogno di un preventivo per ristrutturare la mia cucina. Qualcuno può venire a vederla questa settimana?"
-                        </div>
-                        <div class="message ai">
-                            <strong>Carla:</strong> "Assolutamente! Sarò felice di aiutarla con la ristrutturazione della cucina. Raccolgo alcuni dettagli e fisso una consulenza. Quali sono le dimensioni approssimative della sua cucina?"
-                        </div>
-                        <div class="message customer">
-                            <strong>Cliente:</strong> "È circa 20 metri quadrati. Voglio aggiornare i mobili e i piani di lavoro."
-                        </div>
-                        <div class="message ai">
-                            <strong>Carla:</strong> "Perfetto. Programmerò la visita del nostro specialista per questa settimana. Può fornirmi i suoi contatti e l'orario preferito?"
-                        </div>
+                    <div class="metric">
+                        <strong>99.9%</strong>
+                        <span>Accuracy on service dispatch data</span>
                     </div>
                 </div>
             </div>
+            <div class="hero-visual fade-up fade-delay-1">
+                <div class="hero-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Live AI Operator</div>
+                        <span class="panel-badge">ACTIVE</span>
+                    </div>
+                    <div class="call-card">
+                        <div class="call-avatar">JD</div>
+                        <div class="call-meta">
+                            <strong>Jessica (Inbound)</strong>
+                            <span>"My AC stopped working tonight."</span>
+                        </div>
+                        <span class="call-status">Qualified</span>
+                        <p class="call-transcript"><strong>Upfirst:</strong> "Hi Jessica! I can help with that. I have an opening tomorrow between 8 and 9 AM. Does that work?"</p>
+                        <div class="call-highlight">Booking secured • Job ID 34219</div>
+                    </div>
+                    <div class="call-card">
+                        <div class="call-avatar" style="background: rgba(35, 217, 183, 0.22); color:#040714;">RM</div>
+                        <div class="call-meta">
+                            <strong>Rob (Membership)</strong>
+                            <span>"Can I renew my Comfort plan?"</span>
+                        </div>
+                        <span class="call-status" style="background: rgba(140,108,255,0.14); color:#c8b4ff;">Upsell</span>
+                        <p class="call-transcript"><strong>Upfirst:</strong> "Absolutely! Your renewal is $279. I can confirm it now and schedule your tune-up."</p>
+                    </div>
+                    <div class="call-card">
+                        <div class="call-avatar" style="background: rgba(255, 255, 255, 0.18); color:#040714;">SV</div>
+                        <div class="call-meta">
+                            <strong>Sarah (Follow-up)</strong>
+                            <span>"Just checking on my technician."</span>
+                        </div>
+                        <span class="call-status" style="background: rgba(255,193,7,0.18); color:#ffd86b;">Notified</span>
+                        <p class="call-transcript"><strong>Upfirst:</strong> "Your technician Marco is on route and will arrive within 15 minutes. Text me if you need anything else."</p>
+                    </div>
+                </div>
+                <div class="floating-card">
+                    <span>After-hours bookings</span>
+                    <strong>212%</strong>
+                    <span>increase across Upfirst teams in Q2.</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="logos fade-up fade-delay-1">
+            <p>Trusted by high-velocity service brands</p>
+            <div class="logo-row">
+                <span>MR. SPARK</span>
+                <span>CLIMATEPRO</span>
+                <span>ELITE PLUMB</span>
+                <span>FRESH AIR CO</span>
+                <span>BRIGHT ROOF</span>
+            </div>
+        </section>
+
+        <section id="features" class="fade-up">
+            <div class="section-header">
+                <span class="section-label">What Upfirst handles</span>
+                <h2>Every conversation feels human, yet it happens instantly and scales endlessly.</h2>
+                <p>We blend voice AI, SMS and scheduling workflows built for service franchises so dispatch, revenue and customer satisfaction improve from day one.</p>
+            </div>
+            <div class="feature-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Intelligent booking & dispatch</h3>
+                    <p>Route calls based on territory, calendar availability and technician skills. Upfirst confirms the job, collects notes and pushes clean data into your CRM.</p>
+                    <div class="feature-meta">
+                        <span>ServiceTitan</span>
+                        <span>Housecall Pro</span>
+                        <span>Jobber</span>
+                    </div>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Two-way text follow-up</h3>
+                    <p>Instantly text customers a quote, ETA or payment link. If they reply, Upfirst keeps the thread going and alerts your team when intervention is needed.</p>
+                    <div class="feature-meta">
+                        <span>SMS</span>
+                        <span>WhatsApp</span>
+                        <span>Web chat</span>
+                    </div>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Revenue intelligence</h3>
+                    <p>Monitor conversions, track memberships sold and measure abandoned calls in a single dashboard. Coach your team with searchable transcripts.</p>
+                    <div class="feature-meta">
+                        <span>Insights</span>
+                        <span>Alerts</span>
+                        <span>Exports</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="platform" class="platform fade-up fade-delay-1">
+            <div>
+                <div class="section-header" style="margin-bottom: 2rem;">
+                    <span class="section-label">Platform overview</span>
+                    <h2>Your virtual coordinator that knows your jobs, pricing and brand voice.</h2>
+                    <p>Plug into your phone system, calendars and CRM within days. Upfirst trains on past calls and SOPs so it sounds like your team from the first interaction.</p>
+                </div>
+                <ul>
+                    <li>White-label scripts that mirror your top performers.</li>
+                    <li>Dynamic scheduling logic for multi-location operations.</li>
+                    <li>PCI-compliant payments and membership upsells.</li>
+                    <li>Automatic call summaries, dispositions and CRM updates.</li>
+                    <li>Real-time supervisor view with whisper and takeover.</li>
+                </ul>
+            </div>
+            <div class="platform-visual" id="workflow">
+                <div class="section-label" style="margin-bottom: 0;">Workflow</div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem;">From ring to booked job in under a minute.</h3>
+                <div class="timeline">
+                    <div class="timeline-step" data-step="01">
+                        <strong>Instant intake</strong>
+                        <span>Upfirst greets the caller by name, captures the issue and confirms service location.</span>
+                    </div>
+                    <div class="timeline-step" data-step="02">
+                        <strong>Smart routing</strong>
+                        <span>Checks real-time availability, territory rules and SLAs before presenting options.</span>
+                    </div>
+                    <div class="timeline-step" data-step="03">
+                        <strong>Job confirmation</strong>
+                        <span>Schedules the technician, collects payment or deposit and sends branded reminders.</span>
+                    </div>
+                    <div class="timeline-step" data-step="04">
+                        <strong>Performance loop</strong>
+                        <span>Syncs transcripts and outcomes to your CRM, triggering follow-ups or alerts if needed.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="use-cases fade-up">
+            <div class="section-header">
+                <span class="section-label">Built for</span>
+                <h2>High-volume teams that can't afford to miss a single lead.</h2>
+                <p>Home service organizations trust Upfirst to deliver a consistent customer experience across every channel.</p>
+            </div>
+            <div class="use-case-grid">
+                <article class="use-card">
+                    <h3>HVAC & Plumbing</h3>
+                    <p>Handle urgent breakdowns, warranty checks and maintenance plans with empathy while capturing full job details.</p>
+                </article>
+                <article class="use-card">
+                    <h3>Electrical</h3>
+                    <p>Qualify commercial vs residential work, dispatch on-call techs and upsell safety inspections without delay.</p>
+                </article>
+                <article class="use-card">
+                    <h3>Franchise operations</h3>
+                    <p>Give every location the same proven scripts, reporting and after-hours coverage with zero extra hiring.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="stats-bar fade-up fade-delay-1">
+            <div class="stat-card">
+                <strong>4.8/5</strong>
+                <span>Average caller satisfaction across 50K+ interactions.</span>
+            </div>
+            <div class="stat-card">
+                <strong>$3.2M</strong>
+                <span>Revenue captured each quarter through AI-assisted upsells.</span>
+            </div>
+            <div class="stat-card">
+                <strong>24/7</strong>
+                <span>Coverage with native Spanish and bilingual agents.</span>
+            </div>
+            <div class="stat-card">
+                <strong>30 hrs</strong>
+                <span>Manual admin saved per dispatcher each month.</span>
+            </div>
+        </section>
+
+        <section class="testimonials fade-up">
+            <div class="section-header">
+                <span class="section-label">Customer stories</span>
+                <h2>"We stopped missing after-hours jobs and our CSR team loves the insights."</h2>
+                <p>Leaders at multi-location service brands rely on Upfirst to scale with fewer headaches and more delighted customers.</p>
+            </div>
+            <div class="testimonial-grid">
+                <article class="testimonial-card">
+                    <p>"Before Upfirst we were forwarding calls to an answering service that couldn't book jobs. Now the AI schedules 62% of after-hours requests automatically and our techs show up to a full calendar."</p>
+                    <div class="testimonial-author">
+                        <div class="avatar">AC</div>
+                        <div>
+                            <strong>Amanda Cole</strong>
+                            <span>GM, ComfortAir Group</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="testimonial-card">
+                    <p>"The transcripts and tagging give us instant feedback. We coached our team on objection handling using real examples from the AI conversations."</p>
+                    <div class="testimonial-author">
+                        <div class="avatar" style="background: rgba(35,217,183,0.22); color:#040714;">JS</div>
+                        <div>
+                            <strong>Jamal Singh</strong>
+                            <span>Director of Operations, BrightRoof</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="testimonial-card">
+                    <p>"We launched in two weeks across four territories. Upfirst plugs straight into ServiceTitan so my team sees every job the moment it's booked."</p>
+                    <div class="testimonial-author">
+                        <div class="avatar" style="background: rgba(255,255,255,0.18); color:#040714;">LG</div>
+                        <div>
+                            <strong>Luis Garcia</strong>
+                            <span>Owner, Elite Plumbing & Electric</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section id="pricing" class="pricing fade-up fade-delay-1">
+            <div class="section-header">
+                <span class="section-label">Pricing</span>
+                <h2>Launch fast, scale effortlessly — pay only for the conversations you automate.</h2>
+                <p>Every plan includes onboarding, analytics and human-in-the-loop support to ensure your brand voice stays consistent.</p>
+            </div>
+            <div class="pricing-grid">
+                <article class="pricing-card">
+                    <h3>Launch</h3>
+                    <strong>$899</strong>
+                    <span>per month + usage</span>
+                    <ul>
+                        <li>Dedicated AI phone line & SMS number</li>
+                        <li>ServiceTitan, Housecall Pro or Jobber integration</li>
+                        <li>Up to 5 playbooks & voice styles</li>
+                        <li>Live supervisor dashboard</li>
+                        <li>Human QA on every conversation</li>
+                    </ul>
+                    <a class="ghost-btn" href="mailto:hello@upfirst.ai">Talk to sales</a>
+                </article>
+                <article class="pricing-card highlight">
+                    <h3>Scale</h3>
+                    <strong>Let's chat</strong>
+                    <span>custom programs for multi-location brands</span>
+                    <ul>
+                        <li>Unlimited locations & phone lines</li>
+                        <li>Advanced routing and call deflection flows</li>
+                        <li>Membership & payment workflows</li>
+                        <li>Dedicated success architect</li>
+                        <li>24/7 bilingual coverage</li>
+                    </ul>
+                    <a class="primary-btn" href="#demo">Book strategy call</a>
+                </article>
+            </div>
+        </section>
+
+        <section id="faq" class="faq fade-up">
+            <div class="section-header" style="margin-bottom: 2rem;">
+                <span class="section-label">FAQ</span>
+                <h2>Answers to the most common questions from service leaders.</h2>
+                <p>Can't find the answer you're looking for? Email <a href="mailto:hello@upfirst.ai" style="color:#fff;">hello@upfirst.ai</a>.</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button type="button" aria-expanded="false">
+                        How long does it take to launch Upfirst?
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    </button>
+                    <p>Most teams go live in 10-14 days. We import your scripts, connect calendars and run side-by-side testing before handling real customer conversations.</p>
+                </div>
+                <div class="faq-item">
+                    <button type="button" aria-expanded="false">
+                        Can my team intervene if the AI needs help?
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    </button>
+                    <p>Yes. Supervisors can monitor every live call, whisper guidance or take over instantly. We also alert you when a conversation needs a human follow-up.</p>
+                </div>
+                <div class="faq-item">
+                    <button type="button" aria-expanded="false">
+                        What systems do you integrate with?
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    </button>
+                    <p>We integrate with major home service platforms such as ServiceTitan, Jobber, Housecall Pro, Service Fusion, Salesforce and custom CRMs via API.</p>
+                </div>
+                <div class="faq-item">
+                    <button type="button" aria-expanded="false">
+                        Is Upfirst available in multiple languages?
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+                    </button>
+                    <p>We provide native English and Spanish voices out of the box and can train additional languages or regional accents based on your market.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="demo" class="cta-section fade-up fade-delay-1">
+            <h2>Ready to meet your new top-performing coordinator?</h2>
+            <p>Book a 30-minute walkthrough to hear Upfirst handle real calls, review integrations and build a launch plan tailored to your market.</p>
+            <div class="hero-cta" style="justify-content: center;">
+                <a class="primary-btn" href="https://cal.com" target="_blank" rel="noopener">Schedule demo</a>
+                <a class="ghost-btn" href="mailto:hello@upfirst.ai">Email us</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <a class="brand" href="#top" style="margin-bottom: 1.4rem; display:inline-flex;">
+                    <div class="brand-badge">UF</div>
+                    <span>Upfirst</span>
+                </a>
+                <p style="color: var(--text-muted); max-width: 320px; margin-top: 1rem;">AI-powered conversations that book more jobs, delight customers and give your service teams their time back.</p>
+            </div>
+            <div>
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#platform">Platform overview</a></li>
+                    <li><a href="#features">Capabilities</a></li>
+                    <li><a href="#workflow">Automations</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="mailto:hello@upfirst.ai">Contact</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#demo">Book demo</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Status</a></li>
+                    <li><a href="#">Changelog</a></li>
+                </ul>
+            </div>
         </div>
-    </section>
-
-    <!-- Benefits Section -->
-    <section class="benefits" id="benefits">
-        <div class="container">
-            <div class="section-header fade-in">
-                <h2>Risultati Misurabili</h2>
-                <p>Vedi l'impatto che Carla ha sulla tua azienda dal primo giorno.</p>
-            </div>
-
-            <div class="benefits-grid">
-                <div class="benefit-item fade-in">
-                    <span class="benefit-number">+30%</span>
-                    <div class="benefit-label">Richieste Qualificate in Più</div>
-                    <div class="benefit-description">Attraverso la raccolta completa dei dati e la gestione professionale</div>
-                </div>
-
-                <div class="benefit-item fade-in">
-                    <span class="benefit-number">10ore</span>
-                    <div class="benefit-label">Risparmiate al Mese</div>
-                    <div class="benefit-description">Le aziende riducono significativamente il lavoro amministrativo</div>
-                </div>
-
-                <div class="benefit-item fade-in">
-                    <span class="benefit-number">100%</span>
-                    <div class="benefit-label">Sistema Integrato</div>
-                    <div class="benefit-description">Nessun cambio di strumenti necessario - funziona con la tua configurazione esistente</div>
-                </div>
-
-                <div class="benefit-item fade-in">
-                    <span class="benefit-number">24/7</span>
-                    <div class="benefit-label">Accesso di Emergenza</div>
-                    <div class="benefit-description">Sempre disponibile per le esigenze urgenti dei clienti</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-   <!-- FAQ Section -->
-<section class="faq" id="faq">
-    <div class="container">
-        <div class="section-header fade-in">
-            <h2>Come funziona Carla, l'assistente AI per installatori</h2>
-            <p>Tutto quello che devi sapere per implementare Carla nella tua azienda.</p>
-        </div>
-
-        <div class="faq-container">
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    <span>Serve installare qualcosa?</span>
-                    <span class="faq-toggle">▼</span>
-                </div>
-                <div class="faq-answer">
-                    <p>No, Carla è completamente in cloud. Ti basta impostare il trasferimento di chiamata sul tuo numero fisso o cellulare.</p>
-                </div>
-            </div>
-
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    <span>Come funziona esattamente Carla?</span>
-                    <span class="faq-toggle">▼</span>
-                </div>
-                <div class="faq-answer">
-                    <p>Carla riceve automaticamente le chiamate che non puoi rispondere (numero occupato o fuori orario). Parla con il cliente a nome della tua azienda, capisce il motivo della chiamata (guasto, richiesta di preventivo, appuntamento) e registra tutte le informazioni. I dati raccolti (nome, numero, problema, orario per richiamare) ti vengono trasmessi via email o whatsapp. Nessuna installazione necessaria, tutto funziona via cloud e si attiva quando vuoi (ad esempio solo fuori orario o durante le ferie).</p>
-                </div>
-            </div>
-
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    <span>Carla capisce anche richieste tecniche?</span>
-                    <span class="faq-toggle">▼</span>
-                </div>
-                <div class="faq-answer">
-                    <p>Sì. Carla è progettata appositamente per installatori e professionisti. Riconosce termini come "pompa di calore", "impianto fotovoltaico", "errore tecnico" e sa fare le domande giuste per ogni caso.</p>
-                </div>
-            </div>
-
-            <div class="faq-item fade-in">
-                <div class="faq-question" onclick="toggleFAQ(this)">
-                    <span>Quanto tempo serve per attivare Carla?</span>
-                    <span class="faq-toggle">▼</span>
-                </div>
-                <div class="faq-answer">
-                    <p>Solo poche ore. Il nostro team ti aiuta a configurare saluti, orari di apertura e servizi. Poi sei subito operativo.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-    <!-- Final CTA -->
-    <section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 80px 0; text-align: center; color: white;">
-        <div class="container">
-            <h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 700;">Pronto a Trasformare il Tuo Sistema Telefonico?</h2>
-            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Unisciti ai professionisti che utilizzano il nostro sistema per lavorare con più serenità.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <a href="javascript:void(0)" class="cta-button" style="font-size: 1.1rem; padding: 16px 32px;">Inizia Prova Gratuita Ora</a>
-                <a href="#demo" class="secondary-button">Prenota Demo</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Prodotto</h4>
-                    <a href="#features">Funzionalità</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Azienda</h4>
-                    <a href="javascript:void(0)">Chi Siamo</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Supporto</h4>
-                    <a href="javascript:void(0)">Centro Assistenza</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Informazioni di Contatto</h4>
-                    <p style="color: #cbd5e0; margin-bottom: 0.5rem;">📞 800-CARLA-AI</p>
-                    <p style="color: #cbd5e0; margin-bottom: 0.5rem;">✉️ ciao@carla-ai.com</p>
-                    <p style="color: #cbd5e0;">📍 Disponibile in tutta Italia</p>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 Carla AI. Tutti i diritti riservati. | Privacy Policy | Termini di Servizio</p>
+        <div class="footer-bottom">
+            <span>© <span id="year"></span> Upfirst, Inc. All rights reserved.</span>
+            <div style="display:flex; gap:1.4rem;">
+                <a href="#" style="color: inherit;">Privacy</a>
+                <a href="#" style="color: inherit;">Terms</a>
+                <a href="#" style="color: inherit;">Support</a>
             </div>
         </div>
     </footer>
 
     <script>
-        // FAQ Toggle Function
-        function toggleFAQ(element) {
-            const answer = element.nextElementSibling;
-            const toggle = element.querySelector('.faq-toggle');
-            
-            answer.classList.toggle('active');
-            toggle.classList.toggle('active');
-        }
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-        // Scroll Animation Observer
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
+        const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.1 });
 
-        // Observe all fade-in elements
-        document.addEventListener('DOMContentLoaded', function() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(el => observer.observe(el));
-        });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 100) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-                header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.boxShadow = 'none';
-            }
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+        document.querySelectorAll('.faq-item button').forEach(button => {
+            button.addEventListener('click', () => {
+                const item = button.parentElement;
+                const expanded = item.classList.toggle('open');
+                button.setAttribute('aria-expanded', expanded);
             });
         });
-
-        // Add some interactive elements on load
-        window.addEventListener('load', function() {
-            // Animate trust indicator counter
-            const trustElement = document.querySelector('.trust-indicator strong');
-            if (trustElement) {
-                let count = 0;
-                const target = 800;
-                const increment = target / 50;
-                const timer = setInterval(() => {
-                    count += increment;
-                    if (count >= target) {
-                        count = target;
-                        clearInterval(timer);
-                    }
-                    trustElement.textContent = `Il sistema telefonico AI per gli installatori e gli artigiani`;
-                }, 50);
-            }
-
-            // Add typing effect to demo conversation
-            const messages = document.querySelectorAll('.conversation .message');
-            messages.forEach((message, index) => {
-                message.style.animationDelay = `${index * 0.8}s`;
-            });
-        });
-
-        // Mobile menu toggle (for smaller screens)
-        function toggleMobileMenu() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.classList.toggle('mobile-active');
-        }
-
-        // Add mobile menu styles
-        const mobileStyles = `
-            @media (max-width: 768px) {
-                .nav-links.mobile-active {
-                    display: flex;
-                    flex-direction: column;
-                    position: absolute;
-                    top: 100%;
-                    left: 0;
-                    right: 0;
-                    background: white;
-                    padding: 1rem;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                    border-radius: 0 0 10px 10px;
-                }
-                
-                .mobile-menu-toggle {
-                    display: block;
-                    background: none;
-                    border: none;
-                    font-size: 1.5rem;
-                    cursor: pointer;
-                }
-            }
-        `;
-
-        // Inject mobile styles
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = mobileStyles;
-        document.head.appendChild(styleSheet);
     </script>
 </body>
 </html>
